@@ -129,11 +129,10 @@ function bookInfoText(book) {
 }
 
 function bookNotFoundText() {
-  const available = CATALOG.map((book) => `• ${book.title}`).join("\n");
   return (
-    "No encontré ese título en nuestro catálogo disponible por ahora 😕.\n\n" +
-    `Actualmente tenemos:\n${available}\n\n` +
-    "Escríbeme otro título, o escribe *menu* para volver al menú principal."
+    "No encontré ese título en nuestro catálogo por ahora 😕.\n\n" +
+    "Un asesor te brindará el precio y las promociones con las que contamos. " +
+    "Escribe *menu* y elige la opción 5 (Hablar con un asesor), o intenta con otro título."
   );
 }
 

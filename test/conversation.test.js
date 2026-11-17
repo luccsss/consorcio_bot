@@ -31,6 +31,13 @@ run("opcion invalida menciona rango 1 al 5", () => {
   assert.match(reply, /1 al 5/);
 });
 
+run("libro no encontrado no lista el catalogo, deriva a un asesor", () => {
+  const { newState, reply } = handleIncomingMessage({ state: STATES.BUY_ASK_BOOK }, "odontologia");
+  assert.strictEqual(newState, STATES.BUY_ASK_BOOK);
+  assert.match(reply, /asesor/i);
+  assert.doesNotMatch(reply, /Actualmente tenemos/);
+});
+
 run("opcion 1 inicia el flujo de compra", () => {
   const { newState, reply } = handleIncomingMessage({ state: STATES.MAIN_MENU }, "1");
   assert.strictEqual(newState, STATES.BUY_ASK_BOOK);
