@@ -43,4 +43,29 @@ async function sendText(recipientId, body, quickReplies) {
   );
 }
 
-module.exports = { sendText };
+/**
+ * Envia un archivo (PDF, imagen, etc.) por su URL publica.
+ * @param {string} recipientId PSID (Messenger) o IGSID (Instagram) del destinatario.
+ * @param {string} fileUrl URL publica y accesible del archivo.
+ */
+async function sendFile(recipientId, fileUrl) {
+  const token = getPageToken();
+  const url = `https://graph.facebook.com/${GRAPH_API_VERSION}/me/messages`;
+
+  await axios.post(
+    url,
+    {
+      recipient: { id: recipientId },
+      messaging_type: "RESPONSE",
+      message: {
+        attachment: {
+          type: "file",
+          payload: { url: fileUrl, is_reusable: true },
+        },
+      },
+    },
+    { params: { access_token: token } }
+  );
+}
+
+module.exports = { sendText, sendFile };

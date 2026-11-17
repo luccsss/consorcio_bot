@@ -2,7 +2,7 @@
 
 Bot de atención con un **menú principal de 5 opciones** (`src/conversation.js`):
 
-1. **Comprar un libro**: busca en el catálogo, confirma, pide nombre/dirección/cantidad y guarda el pedido.
+1. **Comprar un libro**: busca en el catálogo, confirma, pide nombre/dirección/cantidad y guarda el pedido. Si el libro no está en el catálogo, deriva a un asesor y manda el folleto `public/libros-en-liquidacion.pdf`.
 2. **Enviar constancia de pago**: pide una foto/captura del comprobante; al recibirla, avisa que el área de verificación la revisará y confirmará si es válida y si corresponde a la última cuota o al monto de la siguiente.
 3. **Consultar mi pedido**: pide DNI y nombre completo, y queda registrada la consulta.
 4. **Consultar mis cuotas**: igual que la anterior, pide DNI y nombre completo.
@@ -45,6 +45,10 @@ nunca se sube a git, ya está en `.gitignore`):
 ```bash
 cp .env.example .env
 ```
+
+`BASE_URL` debe ser la URL pública donde corre el servidor (en Render, la
+de tu servicio) — se usa para que Meta pueda descargar los archivos que el
+bot envía, como el folleto de liquidación.
 
 ## 3. Correr el bot localmente
 

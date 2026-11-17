@@ -62,6 +62,12 @@ const BUY_ASK_BOOK_TEXT =
   "📚 ¡Perfecto! ¿Qué libro estás buscando? Escríbeme el título o tema (ej. \"ultrasonido\")." +
   BACK_TO_MENU_HINT;
 
+// Folleto que se envia junto con el mensaje de "libro no encontrado".
+const CLEARANCE_BROCHURE = {
+  urlPath: "/files/libros-en-liquidacion.pdf",
+  filename: "Libros en liquidación - Consorcio Imperio Perú.pdf",
+};
+
 const PAYMENT_ASK_PROOF_TEXT =
   "💳 Perfecto. Envíame una *foto o captura* de tu comprobante de pago 📷." +
   BACK_TO_MENU_HINT;
@@ -132,6 +138,7 @@ function bookNotFoundText() {
   return (
     "No encontré ese título en nuestro catálogo por ahora 😕.\n\n" +
     "Un asesor te brindará el precio y las promociones con las que contamos. " +
+    "Mientras tanto, te mando nuestros libros en liquidación 📚🔥.\n\n" +
     "Escribe *menu* y elige la opción 5 (Hablar con un asesor), o intenta con otro título."
   );
 }
@@ -185,7 +192,12 @@ function handleIncomingMessage(session, rawText) {
     case STATES.BUY_ASK_BOOK: {
       const book = findBook(text);
       if (!book) {
-        return { newState: STATES.BUY_ASK_BOOK, newData: currentData, reply: bookNotFoundText() };
+        return {
+          newState: STATES.BUY_ASK_BOOK,
+          newData: currentData,
+          reply: bookNotFoundText(),
+          attachment: CLEARANCE_BROCHURE,
+        };
       }
       return {
         newState: STATES.BUY_ASK_CONFIRM,

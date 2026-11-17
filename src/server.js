@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const {
   STATES,
@@ -16,9 +17,15 @@ const inquiriesStore = require("./inquiriesStore");
 
 const app = express();
 app.use(express.json());
+// Archivos publicos (folletos, etc.) que se envian como adjuntos; Meta los
+// descarga de su URL publica, no se los podemos subir directo en el chat.
+app.use("/files", express.static(path.join(__dirname, "..", "public")));
 
 const PORT = process.env.PORT || 3000;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+// URL publica de este servidor (ej. https://consorcio-bot.onrender.com),
+// necesaria para construir enlaces absolutos a los archivos de /files.
+const BASE_URL = process.env.BASE_URL;
 
 // Solo para Messenger/Instagram: mientras WhatsApp no este disponible,
 // se invita a los clientes a escribir alli para atencion mas rapida.
@@ -73,6 +80,13 @@ function persistCompletedAction(channel, customerId, result) {
   }
 }
 
+// Si la conversacion pidio mandar un archivo (ej. folleto de liquidacion),
+// construye la URL publica completa a partir de BASE_URL.
+function attachmentUrl(attachment) {
+  if (!attachment || !BASE_URL) return null;
+  return `${BASE_URL}${attachment.urlPath}`;
+}
+
 function extractWhatsAppText(message) {
   if (message.type === "image" || message.type === "document") {
     return IMAGE_RECEIVED_TOKEN;
@@ -100,6 +114,11 @@ async function handleWhatsAppEvent(body) {
   persistCompletedAction("whatsapp", from, result);
 
   await whatsapp.sendText(from, result.reply);
+
+  const fileUrl = attachmentUrl(result.attachment);
+  if (fileUrl) {
+    await whatsapp.sendDocument(from, fileUrl, result.attachment.filename);
+  }
 }
 
 function extractMetaMessagingText(message) {
@@ -135,6 +154,11 @@ async function handleMetaMessagingEvent(body, channel) {
   const quickReplies = isMainMenu ? MENU_QUICK_REPLIES : BACK_TO_MENU_QUICK_REPLIES;
 
   await metaMessaging.sendText(senderId, finalReply, quickReplies);
+
+  const fileUrl = attachmentUrl(result.attachment);
+  if (fileUrl) {
+    await metaMessaging.sendFile(senderId, fileUrl);
+  }
 }
 
 app.get("/", (_req, res) => {

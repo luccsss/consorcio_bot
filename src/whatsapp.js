@@ -40,4 +40,31 @@ async function sendText(to, body) {
   );
 }
 
-module.exports = { sendText };
+/**
+ * Envia un documento (PDF, etc.) por su URL publica.
+ * @param {string} to Numero destino en formato E.164 sin "+" (ej. "51999999999").
+ * @param {string} fileUrl URL publica y accesible del archivo.
+ * @param {string} [filename] Nombre de archivo sugerido.
+ */
+async function sendDocument(to, fileUrl, filename) {
+  const { phoneNumberId, token } = getConfig();
+  const url = `https://graph.facebook.com/${GRAPH_API_VERSION}/${phoneNumberId}/messages`;
+
+  await axios.post(
+    url,
+    {
+      messaging_product: "whatsapp",
+      to,
+      type: "document",
+      document: { link: fileUrl, filename },
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
+
+module.exports = { sendText, sendDocument };
