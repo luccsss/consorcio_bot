@@ -21,6 +21,14 @@ app.use(express.json());
 // descarga de su URL publica, no se los podemos subir directo en el chat.
 app.use("/files", express.static(path.join(__dirname, "..", "public")));
 
+// Paginas legales requeridas por Meta para la revision de la app.
+app.get("/privacy", (_req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "privacy.html"));
+});
+app.get("/data-deletion", (_req, res) => {
+  res.redirect("/privacy#eliminacion");
+});
+
 const PORT = process.env.PORT || 3000;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 // URL publica de este servidor (ej. https://consorcio-bot.onrender.com),
