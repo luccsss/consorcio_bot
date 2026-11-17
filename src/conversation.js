@@ -136,10 +136,10 @@ function bookInfoText(book) {
 
 function bookNotFoundText() {
   return (
-    "No encontré ese título en nuestro catálogo por ahora 😕.\n\n" +
-    "Un asesor te brindará el precio y las promociones con las que contamos. " +
-    "Mientras tanto, te mando nuestros libros en liquidación 📚🔥.\n\n" +
-    "Escribe *menu* y elige la opción 5 (Hablar con un asesor), o intenta con otro título."
+    "¡Perfecto! 📚 Hemos recibido el título que estás buscando.\n\n" +
+    "Uno de nuestros asesores te brindará información sobre el precio y las promociones disponibles.\n\n" +
+    "Mientras tanto, te invitamos a conocer nuestros *libros en liquidación* 🔥. ¡Tenemos ofertas especiales que podrían interesarte!\n\n" +
+    "Si deseas consultar por otro título, puedes escribirlo aquí o escribir *menu* y seleccionar la *opción 5: Hablar con un asesor*."
   );
 }
 
